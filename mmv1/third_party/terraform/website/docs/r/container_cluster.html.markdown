@@ -137,6 +137,9 @@ for more details. Structure is [documented below](#nested_cluster_autoscaling).
 * `binary_authorization` - (Optional) Configuration options for the Binary
   Authorization feature. Structure is [documented below](#nested_binary_authorization).
 
+* `mesh_certificates` - (Optional)
+    Structure is [documented below](#nested_mesh_encryption).
+
 * `database_encryption` - (Optional)
     Structure is [documented below](#nested_database_encryption).
 
@@ -416,7 +419,13 @@ addons_config {
 
 * `enabled` - (DEPRECATED) Enable Binary Authorization for this cluster. Deprecated in favor of `evaluation_mode`.
 
-* `evaluation_mode` - (Optional) Mode of operation for Binary Authorization policy evaluation.
+* `evaluation_mode` - (Optional) Mode of operation for Binary Authorization policy evaluation. Valid values are `DISABLED`
+  and `PROJECT_SINGLETON_POLICY_ENFORCE`. `PROJECT_SINGLETON_POLICY_ENFORCE` is functionally equivalent to the
+  deprecated `enable_binary_authorization` parameter being set to `true`.
+
+<a name="nested_mesh_certificates"></a>The `mesh_certificates` block supports:
+
+* `enable_certificates` - (Required) Controls the issuance of workload mTLS certificates. It is enabled by default. Workload Identity is required, see [workload_config](#nested_workload_identity_config).
 
 <a name="nested_database_encryption"></a>The `database_encryption` block supports:
 
@@ -482,6 +491,8 @@ as "Intel Haswell" or "Intel Sandy Bridge".
 -> `monitoring.write` is always enabled regardless of user input.  `monitoring` and `logging.write` may also be enabled depending on the values for `monitoring_service` and `logging_service`.
 
 * `service_account` - (Optional) The Google Cloud Platform Service Account to be used by the node VMs.
+
+* `boot_disk_kms_key` - (Optional) The Customer Managed Encryption Key used to encrypt the boot disk attached to each node in the node pool. This should be of the form projects/[KEY_PROJECT_ID]/locations/[LOCATION]/keyRings/[RING_NAME]/cryptoKeys/[KEY_NAME]. For more information about protecting resources with Cloud KMS Keys please see: https://cloud.google.com/compute/docs/disks/customer-managed-encryption
 
 * `image_type` - (Optional) The default image type used by NAP once a new node pool is being created. Please note that according to the [official documentation](https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-provisioning#default-image-type) the value must be one of the [COS_CONTAINERD, COS, UBUNTU_CONTAINERD, UBUNTU]. __NOTE__ : COS AND UBUNTU are deprecated as of `GKE 1.24`
 
